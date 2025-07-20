@@ -447,8 +447,11 @@ def remove_up_to_last_ai_message(messages: list[MessageLikeRepresentation]) -> l
 # Misc Utils
 ##########################
 def get_today_str() -> str:
-    """Get current date in a human-readable format."""
-    return datetime.now().strftime("%a %b %-d, %Y")
+    """現在の日付を人間が読みやすい形式で取得します。OSごとに書式を切り替えます。"""
+    import platform  # OS判定用
+    # Windowsの場合は%#d、それ以外（Linux/macOS等）は%-d
+    day_format = "%#d" if platform.system() == "Windows" else "%-d"
+    return datetime.now().strftime(f"%a %b {day_format}, %Y")
 
 def get_config_value(value):
     if value is None:
