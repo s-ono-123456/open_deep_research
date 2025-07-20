@@ -3,10 +3,10 @@
 """
 # 必要なモジュールをインポート
 import asyncio
-from src.open_deep_research.deep_researcher import deep_researcher
-from src.open_deep_research.configuration import Configuration
-from src.open_deep_research.state import AgentInputState
-from src.open_deep_research.configuration import SearchAPI, MCPConfig, RunnableConfig
+from open_deep_research.deep_researcher import deep_researcher
+from open_deep_research.configuration import Configuration
+from open_deep_research.state import AgentInputState
+from open_deep_research.configuration import SearchAPI, MCPConfig, RunnableConfig
 
 # テスト用の設定と入力状態を作成
 config = Configuration(
@@ -34,16 +34,22 @@ config = Configuration(
 
 input_state = AgentInputState(
     messages=[{"content": """
-               mcp-server-filesystemを利用して、open_deep_researchのファイルを確認してください。
-               その後、このファイルで用意されているDeepResearch処理ではOpenAIのgpt-4.1などのモデルを利用していますが、
-               AIモデルとしてAzure OpenAI ServicesのAPIを利用するにはソースコードのどこを変えればよいのかの調査を行い、結果をまとめてください。
+参議院議員選挙の神奈川県選挙区の候補者情報を調べてください。
+最新の情勢をもとに、各候補者がどの程度得票するかを予測してください。
+以下の情報を含めてください。
+
+- 各候補者の名前
+- 各候補者の政党
+- 各候補者の得票予測
+- 選挙区の情勢分析
+- 参考にした情報源のURL
                """, "type": "human"}],
 )
 
 # deep_researcherを非同期で呼び出す関数
 async def run_deep_researcher():
     # deep_researcherは非同期関数なのでawaitで呼び出します
-    result = await deep_researcher.ainvoke(input_state)
+    result = await deep_researcher.ainvoke(input_state, config.model_dump())
     print("--- deep_researcher完了しました。 ---")
     # 最後のAIMessageを取得
     report = result.get("messages", [])[-1]
